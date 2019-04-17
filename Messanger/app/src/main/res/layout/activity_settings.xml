@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="445dp"
+        android:src="@drawable/photo"
+
+        app:civ_border_width="1dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="266dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="462dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginBottom="221dp"
+        android:background="#CF3535"
+        android:text="CHANGE IMAGE"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/change_status"
+        android:layout_width="257dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="562dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="121dp"
+        android:background="#FFF"
+        android:text="CHANGE STATUS"
+        android:textColor="@color/colorNew"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/displayname"
+        android:layout_width="197dp"
+        android:layout_height="74dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="109dp"
+        android:layout_marginTop="291dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="365dp"
+        android:text="Display Name"
+        android:textAlignment="center"
+        android:textColor="@color/cast_expanded_controller_progress_text_color"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/default_status"
+        android:layout_width="317dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="354dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="342dp"
+        android:text="Hi there ! I am using Messanger"
+        android:textAlignment="center"
+        android:textColor="@color/cast_expanded_controller_progress_text_color"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

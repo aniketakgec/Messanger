@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Messanger</string>
+    <string name="your_string_here"> <b>New User ? <u>Register here</u></b></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
