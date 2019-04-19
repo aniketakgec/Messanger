@@ -38,6 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
    private DatabaseReference mdatabase;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,13 +86,27 @@ public class RegistrationActivity extends AppCompatActivity {
                             userMap.put("name",display_name);
                             userMap.put("status","Hi there I am using Whatsapp");
                             userMap.put("image","default");
-                            userMap.put("thumb_image","default");
-                              mdatabase.setValue(userMap);
+                         //   userMap.put("thumb_image","default");
+                              mdatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                  @Override
+                                  public void onComplete(@NonNull Task<Void> task) {
+                                      if(task.isSuccessful())
+                                      {
+                                          progressDialog.dismiss();
+                                          Intent mainIntent = new Intent(RegistrationActivity.this, MainActivity.class);
+                                          startActivity(mainIntent);
+                                          finish();
 
-                            /*progressDialog.dismiss();
-                            Intent mainIntent = new Intent(RegistrationActivity.this, MainActivity.class);
-                            startActivity(mainIntent);
-                            finish();*/
+                                      }
+                                      else
+                                      {
+                                          Toast.makeText(RegistrationActivity.this,"YOU GOT DATABASE ERROR",Toast.LENGTH_SHORT).show();
+                                      }
+
+                                  }
+                              });
+
+
 
                         }
                         else {
