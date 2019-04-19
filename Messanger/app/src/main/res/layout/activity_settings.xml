@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity"
+    tools:context=".SettingsActivity"
     android:background="#DAD5D5">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -37,7 +37,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -65,12 +64,13 @@
         app:layout_constraintVertical_bias="0.303" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/change_status"
         android:layout_width="213dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:onClick="changestatus"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button1shape"
         android:text="Change Status"

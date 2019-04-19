@@ -1,9 +1,12 @@
 package com.example.android.messanger;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ private FirebaseUser mCurrentUser;
     private CircleImageView mcircleImageView;
     private TextView account_status;
     private     TextView mDispalyname;
+    private Button statusBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +34,11 @@ private FirebaseUser mCurrentUser;
         mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
         String uid=mCurrentUser.getUid();
         mDispalyname=findViewById(R.id.displayname);
+        statusBtn=findViewById(R.id.change_status);
         mcircleImageView=findViewById(R.id.profile_pic);
         account_status=findViewById(R.id.account_status);
         mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -52,5 +58,14 @@ private FirebaseUser mCurrentUser;
         });
 
 
+    }
+
+
+    public void changestatus(View view) {
+        String status_value=account_status.getText().toString();
+
+        Intent i=new Intent(SettingsActivity.this,StatusActivity.class);
+        i.putExtra("status_value",status_value);
+        startActivity(i);
     }
 }
