@@ -77,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
              Intent i=new Intent(this,SettingsActivity.class);
              startActivity(i);
          }
+        if(item.getItemId()==R.id.account)
+        {
+            Intent i=new Intent(this,UsersActivity.class);
+            startActivity(i);
+        }
          return true;
     }
 }
