@@ -13,10 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UsersActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".StatusActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".UsersActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".StatusActivity"
+            android:parentActivityName=".SettingsActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".StartActivity" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".LoginActivity" />

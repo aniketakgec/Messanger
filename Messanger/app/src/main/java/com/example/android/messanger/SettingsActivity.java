@@ -37,6 +37,10 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -55,7 +59,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private DatabaseReference mUserDatabase;
     private StorageReference mImagetorage,filepath;
-
+   private byte[] thumb_byte;
     private static final int GALLERY_PIC=1;
     private static final int MAX_LENGTH=10;
 
@@ -141,14 +145,29 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                 Uri resultUri = result.getUri();
+                final File thumb_filePath=new File(resultUri.getPath());
+                try {
+                    Bitmap thumbBitmap=new Compressor(SettingsActivity.this)
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(75)
+                            .compressToBitmap(thumb_filePath);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    thumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                   thumb_byte = baos.toByteArray();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                  filepath=mImagetorage.child("profile_images").child(uid+".jpg");
+
+                filepath=mImagetorage.child("profile_images").child(uid+".jpg");
+               final StorageReference thumb_filepath=mImagetorage.child("profile_images").child("thumbs").child(uid+".jpg");
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful())
                         {
-                           Toast.makeText(SettingsActivity.this,"Profile Pic Updated",Toast.LENGTH_SHORT).show();
+
                             filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -158,8 +177,42 @@ public class SettingsActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful())
                                             {
-                                                mProgressDialog.dismiss();
+                                                UploadTask uploadTask=thumb_filepath.putBytes(thumb_byte);
+                                                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> thumb_task) {
+                                                        if (thumb_task.isSuccessful())
+                                                        {
+                                                            thumb_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                @Override
+                                                                public void onSuccess(Uri uri) {
 
+                                                                    mUserDatabase.child("thumb_image").setValue(uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if(task.isSuccessful())
+                                                                            {
+                                                                                mProgressDialog.dismiss();
+                                                                                Toast.makeText(SettingsActivity.this,"Profile Pic Updated",Toast.LENGTH_SHORT).show();
+
+
+                                                                            }
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                            });
+
+                                                        }
+                                                        else
+                                                        {
+                                                            Toast.makeText(SettingsActivity.this,"Error Uploading thumbnail",Toast.LENGTH_SHORT).show();
+
+                                                        }
+
+
+                                                    }
+                                                });
 
                                             }
                                         }
