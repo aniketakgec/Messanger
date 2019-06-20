@@ -33,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -71,6 +73,9 @@ public class SettingsActivity extends AppCompatActivity {
         mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
          uid=mCurrentUser.getUid();
         mDisplayImage=findViewById(R.id.profile_pic);
+        statusBtn=findViewById(R.id.change_status);
+        mcircleImageView=findViewById(R.id.profile_pic);
+        account_status=findViewById(R.id.account_status);
 
         mImagetorage= FirebaseStorage.getInstance().getReference();
 
@@ -85,13 +90,12 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(uid);
 
         mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-        statusBtn=findViewById(R.id.change_status);
-        mcircleImageView=findViewById(R.id.profile_pic);
-        account_status=findViewById(R.id.account_status);
 
-        final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(uid);
+        mUserDatabase.keepSynced(true);
+
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,10 +106,23 @@ public class SettingsActivity extends AppCompatActivity {
                 image=dataSnapshot.child("image").getValue().toString();
                 mDispalyname.setText(name);
                 account_status.setText(status);
-                if(image!=null)
-                Picasso.get().load(image).resize(500,550).into(mDisplayImage);
-                else
-                    Picasso.get().load(R.drawable.images).into(mDisplayImage);
+                if(image.equals("default"))
+                {
+                   // Picasso.get().load(image).resize(500, 550).into(mDisplayImage);
+                    Picasso.get().load(image).resize(500,500).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.images).into(mDisplayImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load(image).resize(500, 550).placeholder(R.drawable.images).into(mDisplayImage);
+                        }
+                    });
+
+                }
+
 
             }
 
