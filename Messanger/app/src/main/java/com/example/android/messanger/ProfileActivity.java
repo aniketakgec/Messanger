@@ -67,7 +67,42 @@ public class ProfileActivity extends AppCompatActivity {
                 mProfileName.setText(display_name);
                 mProfileStatus.setText(status);
                 Picasso.get().load(image).placeholder(R.drawable.images).into(mProfileImage);
-                mProgressDialog.dismiss();
+
+                // -----------------Friend List/Request feature-------------->
+
+
+
+
+                mFriendRequestDatabase.child(mCurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        mProgressDialog.dismiss();
+                        if (dataSnapshot.hasChild(user_id))
+                        {
+                            String request_type=dataSnapshot.child(user_id).child("request_type").getValue().toString();
+                            if (request_type.equals("received"))
+                            {
+                                //mProfileSendRequest.setEnabled(true);
+                                current_state="request_received";
+                                mProfileSendRequest.setText("Accept Friend Request");
+
+                            }
+                            else if(request_type.equals("sent"))
+                            {
+                                current_state="request_sent";
+                                mProfileSendRequest.setText("Cancel Friend Request");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+               // mProgressDialog.dismiss();
 
 
             }
