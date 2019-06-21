@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -74,6 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
+                            String deviceToken= FirebaseInstanceId.getInstance().getToken();
 
                             FirebaseUser currentUser=FirebaseAuth.getInstance().getCurrentUser();
                             String uid=currentUser.getUid();
@@ -82,6 +84,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             userMap.put("name",display_name);
                             userMap.put("status","Hi there I am using Whatsapp");
                             userMap.put("image","default");
+                            userMap.put("device_token",deviceToken);
                          //   userMap.put("thumb_image","default");
                               mdatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                   @Override

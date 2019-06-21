@@ -3,6 +3,8 @@ package com.example.android.messanger;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +19,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     private Toolbar mtoolbar;
+    private DatabaseReference mUserDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Messanger </font>"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         progressDialog=new ProgressDialog(this);
+        mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,20 +75,32 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             private void login_user(String email, String pass) {
-mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
-        if (task.isSuccessful())
-        {  progressDialog.dismiss();
-            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(mainIntent);
-            finish();
+                if (task.isSuccessful())
+                {  progressDialog.dismiss();
 
-        }
-        else {
-            progressDialog.hide();
-            Toast.makeText(LoginActivity.this,"Cannot Sign in.Please check the form and try again",Toast.LENGTH_LONG).show();
-        }
+                    String deviceToken= FirebaseInstanceId.getInstance().getToken();
+
+                    String current_user_id=mAuth.getCurrentUser().getUid();
+                    mUserDatabase.child(current_user_id).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(mainIntent);
+                            finish();
+
+
+                        }
+                    });
+
+
+                }
+                else {
+                    progressDialog.hide();
+                    Toast.makeText(LoginActivity.this,"Cannot Sign in.Please check the form and try again",Toast.LENGTH_LONG).show();
+                    }
 
     }
 });
