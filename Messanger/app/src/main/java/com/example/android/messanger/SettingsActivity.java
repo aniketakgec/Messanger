@@ -106,12 +106,13 @@ public class SettingsActivity extends AppCompatActivity {
                 image=dataSnapshot.child("image").getValue().toString();
                 mDispalyname.setText(name);
                 account_status.setText(status);
-                if(image.equals("default"))
+                if(!image.equals("default"))
                 {
                    // Picasso.get().load(image).resize(500, 550).into(mDisplayImage);
                     Picasso.get().load(image).resize(500,500).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.images).into(mDisplayImage, new Callback() {
                         @Override
                         public void onSuccess() {
+                            //Picasso.get().load(image).resize(500, 550).placeholder(R.drawable.images).into(mDisplayImage);
 
                         }
 
