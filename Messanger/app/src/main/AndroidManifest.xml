@@ -14,7 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".Messanger">
-        <activity android:name=".ProfileActivity"></activity>
+        <service android:name=".FirebaseMessangingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name=".ProfileActivity">
+            <intent-filter>
+                <action
+                    android:name="com.example.android.messanger_TARGET_NOTIFICATION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".UsersActivity"
             android:parentActivityName=".MainActivity" />
