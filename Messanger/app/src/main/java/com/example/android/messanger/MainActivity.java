@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -19,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private SectionsPagerAdapter mSectionsPagerAdpapter;
     private TabLayout mTablayout;
-
+    private DatabaseReference mUserRef;
+    FirebaseUser current_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,15 +30,23 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mtoolbar=findViewById(R.id.toolbar);
         mTablayout=findViewById(R.id.main_tabs);
+        current_user=mAuth.getCurrentUser();
         setSupportActionBar(mtoolbar);
         viewPager=findViewById(R.id.main_tab_pager);
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>Messanger </font>"));
         mSectionsPagerAdpapter=new SectionsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mSectionsPagerAdpapter);
+//        mUserRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         mTablayout.setupWithViewPager(viewPager);
 
         mTablayout.setTabTextColors(getResources().getColor(R.color.colorHintTextLight),
                 getResources().getColor(R.color.colorPrimaryTextLight));
+
+        if (mAuth.getCurrentUser() != null) {
+
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+
+        }
 
     }
     @Override
@@ -47,6 +58,18 @@ public class MainActivity extends AppCompatActivity {
             sendToStart();
 
         }
+        else
+        {
+            mUserRef.child("online").setValue(true);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (current_user!=null)
+        mUserRef.child("online").setValue(false);
 
     }
 
