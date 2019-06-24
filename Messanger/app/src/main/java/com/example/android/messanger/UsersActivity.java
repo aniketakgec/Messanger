@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -29,13 +31,16 @@ import org.w3c.dom.Text;
 public class UsersActivity extends AppCompatActivity {
 private Toolbar mtoolbar;
 private RecyclerView mUsersList;
-private DatabaseReference mUsersDatabase;
+private FirebaseAuth mAuth;
+private FirebaseUser current_user;
+private DatabaseReference mUsersDatabase,mUserRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
         mtoolbar=findViewById(R.id.users_appBar);
         setSupportActionBar(mtoolbar);
+        mAuth=FirebaseAuth.getInstance();
         mUsersList=findViewById(R.id.users_list);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        // getSupportActionBar().setTitle("All Users");
@@ -43,13 +48,28 @@ private DatabaseReference mUsersDatabase;
         mUsersDatabase= FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersList.setHasFixedSize(true);
         mUsersList.setLayoutManager(new LinearLayoutManager(this));
+        if (mAuth.getCurrentUser() != null) {
+
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+
+        }
 
 
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser==null) {
+            sendToStart();
+
+        }
+        else
+        {
+            mUserRef.child("online").setValue(true);
+        }
         FirebaseRecyclerOptions<Users> options =
                 new FirebaseRecyclerOptions.Builder<Users>()
                         .setQuery(mUsersDatabase, Users.class)
@@ -91,6 +111,20 @@ private DatabaseReference mUsersDatabase;
 
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (current_user!=null)
+            mUserRef.child("online").setValue(false);
+
+    }
+
+    private void sendToStart() {
+        Intent startIntent = new Intent(UsersActivity.this, StartActivity.class);
+        startActivity(startIntent);
+        finish();
+    }
     public static  class UsersViewHolder extends RecyclerView.ViewHolder {
         View mView;
         public UsersViewHolder(@NonNull View itemView) {

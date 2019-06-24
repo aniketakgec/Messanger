@@ -53,13 +53,14 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private CircleImageView mcircleImageView;
     private TextView account_status;
+    private FirebaseAuth mAuth;
     private TextView mDispalyname;
     private Button ImageBtn;
     private ImageView mDisplayImage;
     private Button statusBtn;
     private ProgressDialog mProgressDialog;
-
-    private DatabaseReference mUserDatabase;
+    private FirebaseUser current_user;
+    private DatabaseReference mUserDatabase,mUserRef;
     private StorageReference mImagetorage,filepath;
    private byte[] thumb_byte;
     private static final int GALLERY_PIC=1;
@@ -74,10 +75,18 @@ public class SettingsActivity extends AppCompatActivity {
          uid=mCurrentUser.getUid();
         mDisplayImage=findViewById(R.id.profile_pic);
         statusBtn=findViewById(R.id.change_status);
+        mAuth=FirebaseAuth.getInstance();
         mcircleImageView=findViewById(R.id.profile_pic);
+        current_user=mAuth.getCurrentUser();
         account_status=findViewById(R.id.account_status);
 
         mImagetorage= FirebaseStorage.getInstance().getReference();
+
+        if (mAuth.getCurrentUser() != null) {
+
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+
+        }
 
         mDispalyname=findViewById(R.id.displayname);
         ImageBtn=findViewById(R.id.change_image);
@@ -137,6 +146,34 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser==null) {
+            sendToStart();
+
+        }
+        else
+        {
+            mUserRef.child("online").setValue(true);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (current_user!=null)
+            mUserRef.child("online").setValue(false);
+
+    }
+    private void sendToStart() {
+        Intent startIntent = new Intent(SettingsActivity.this, StartActivity.class);
+        startActivity(startIntent);
+        finish();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
