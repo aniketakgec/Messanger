@@ -29,8 +29,9 @@ public class Messanger extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
         mAuth=FirebaseAuth.getInstance();
-        mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
-
+        if (mAuth.getCurrentUser() != null) {
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+        }
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

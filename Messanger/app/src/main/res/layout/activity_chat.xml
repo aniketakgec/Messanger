@@ -23,27 +23,30 @@
         app:layout_constraintVertical_bias="1.0"
         tools:layout_editor_absoluteX="0dp">
 
+
         <Button
+            android:id="@+id/chat_add_button"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:layout_weight="1"
-            android:background="@drawable/ic_baseline_add_24px"
+            android:layout_weight="0.5"
 
+            android:background="@drawable/ic_baseline_add_24px"
             android:textColor="@color/cast_expanded_controller_text_color" />
 
         <EditText
+            android:id="@+id/chat_message_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="6"
+            android:layout_weight="4"
             android:hint="Type message here"
             android:textSize="18sp" />
 
         <Button
+            android:id="@+id/chat_send_button"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:layout_weight="1"
-            android:background="@drawable/ic_baseline_send_24px"
-            />
+            android:layout_weight="0.5"
+            android:background="@drawable/ic_baseline_send_24px" />
 
 
     </LinearLayout>
