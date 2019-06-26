@@ -21,12 +21,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.214" />
+        app:layout_constraintVertical_bias="0.529" />
 
     <TextView
         android:id="@+id/message_text_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="193dp"
+        android:layout_height="76dp"
 
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -35,12 +35,12 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/message_text_background"
         android:gravity="center"
-        android:padding="15dp"
-        android:paddingStart="8dp"
-        android:paddingLeft="0dp"
+        android:padding="25dp"
+        android:paddingStart="15dp"
+        android:paddingLeft="15dp"
         android:paddingTop="10dp"
-        android:paddingEnd="8dp"
-        android:paddingRight="0dp"
+        android:paddingEnd="15dp"
+        android:paddingRight="15dp"
         android:paddingBottom="10dp"
         android:text="CHATMESSAGE"
         android:textAlignment="textStart"
@@ -57,7 +57,7 @@
     <TextView
         android:id="@+id/message_time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="27dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -66,10 +66,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintStart_toEndOf="@+id/message_text_layout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintVertical_bias="0.868" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

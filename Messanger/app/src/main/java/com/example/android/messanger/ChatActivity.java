@@ -59,6 +59,9 @@ private final List<Messages> messagesList=new ArrayList<>();
 private LinearLayoutManager mLinearLayout;
 private static final int TOTAL_ITEMS_TO_LOAD=5;
 private static  int mCurrentPage=1;
+private static  int itemPosition=0;
+private String  mLastKey="";
+    private String  mPrevKey="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,8 +174,9 @@ private static  int mCurrentPage=1;
             @Override
             public void onRefresh() {
                 mCurrentPage++;
-                messagesList.clear();
-                loadMessages();
+               // messagesList.clear();
+                itemPosition=0;
+                loadMoreMessages();
             }
         });
 
@@ -249,6 +253,67 @@ private static  int mCurrentPage=1;
 
     }
 
+
+    private void loadMoreMessages() {
+
+
+        DatabaseReference messageRef=mRootRef.child("messages").child(mCurrentUserId).child(mchatUser);
+
+        Query messageQuery=messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+        messageQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                messagesList.add(itemPosition++,messages);
+                String messageKey=dataSnapshot.getKey();
+
+                if (!mPrevKey.equals(messageKey))
+                {
+                    messagesList.add(itemPosition++,messages);
+                }
+                else
+                {
+                    mPrevKey=mLastKey;
+                }
+
+                if (itemPosition==1)
+                {
+
+                    mLastKey=messageKey;
+                }
+
+
+
+
+                mAdapter.notifyDataSetChanged();
+                mLinearLayout.scrollToPositionWithOffset(itemPosition,0);
+                mRefreshLayout.setRefreshing(false);
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void loadMessages() {
         DatabaseReference messageRef=mRootRef.child("messages").child(mCurrentUserId).child(mchatUser);
 
@@ -259,6 +324,17 @@ private static  int mCurrentPage=1;
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Messages messages=dataSnapshot.getValue(Messages.class);
+                String messageKey=dataSnapshot.getKey();
+
+
+
+                if (itemPosition==1)
+                {
+
+                    mLastKey=messageKey;
+                    mPrevKey=messageKey;
+                }
+
                 messagesList.add(messages);
                 mAdapter.notifyDataSetChanged();
                 mMessagesList.scrollToPosition(messagesList.size()-1);
