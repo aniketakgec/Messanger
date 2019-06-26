@@ -29,7 +29,7 @@ public class Messanger extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
         mAuth=FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
+       /* if (mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         }
         mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -48,7 +48,7 @@ public class Messanger extends Application {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });// BUG TO FIX LOGIN APP CRASHES IF NO USER IS LOGGED IN ,IT WILL BE FIXED SOON
-
+        });  // BUG TO FIX LOGIN APP CRASHES IF NO USER IS LOGGED IN ,IT WILL BE FIXED SOON
+*/
     }
 }

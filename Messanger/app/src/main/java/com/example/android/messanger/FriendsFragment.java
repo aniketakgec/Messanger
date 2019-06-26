@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -48,12 +49,16 @@ public class FriendsFragment extends Fragment {
 
 
         mFriendList = (RecyclerView) mMainView.findViewById(R.id.FriendList);
+
         mAuth = FirebaseAuth.getInstance();
         mCurrent_user_id = mAuth.getCurrentUser().getUid();
+
         mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrent_user_id);
         mFriendDatabase.keepSynced(true);
+
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true );
+
         mFriendList.setHasFixedSize(true);
         mFriendList.setLayoutManager(new LinearLayoutManager(getContext()));
         return mMainView;
@@ -80,14 +85,15 @@ public class FriendsFragment extends Fragment {
                         final String userName=dataSnapshot.child("name").getValue().toString();
                         String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
 
-                        friendsViewHolder.setName(userName);
-                        friendsViewHolder.setUserImage(thumb_image);
+
                         if (dataSnapshot.hasChild("online"))
                         {
                         String user_online=dataSnapshot.child("online").getValue().toString();
                             friendsViewHolder.setUserOnline(user_online);
 
                         }
+                        friendsViewHolder.setName(userName);
+                        friendsViewHolder.setUserImage(thumb_image);
 
                         friendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -113,6 +119,8 @@ public class FriendsFragment extends Fragment {
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("user_id", list_user_id);
                                             chatIntent.putExtra("user_name",userName);
+                                           //Toast.makeText(getActivity(),userName,Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getActivity(),list_user_id,Toast.LENGTH_LONG).show();
                                             //chatIntent.putExtra("user_name", userName);
                                             startActivity(chatIntent);
 
