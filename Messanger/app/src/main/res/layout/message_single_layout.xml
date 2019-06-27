@@ -14,14 +14,14 @@
         android:layout_height="39dp"
 
 
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/images"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.529" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/message_text_layout"
@@ -34,7 +34,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/message_text_background"
-        android:gravity="center"
         android:padding="25dp"
         android:paddingStart="15dp"
         android:paddingLeft="15dp"
@@ -54,6 +53,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <ImageView
+        android:id="@+id/messageImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:scaleType="centerCrop"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_text_layout"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/message_time"
         android:layout_width="wrap_content"
@@ -66,10 +81,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toEndOf="@+id/message_text_layout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.868" />
+        app:layout_constraintVertical_bias="0.606" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

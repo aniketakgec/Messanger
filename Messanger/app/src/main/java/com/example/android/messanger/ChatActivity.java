@@ -12,6 +12,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Context;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.text.TextUtils;
@@ -24,6 +26,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +38,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -51,7 +59,7 @@ private CircleImageView mProfileImage;
 private FirebaseAuth mAuth;
 private String mCurrentUserId,push_id;
 private MessageAdapter mAdapter;
-private Button mChatAddBtn,mChatSendBtn;
+private Button mChatSendBtn;
 private EditText mchatmessageView;
 private SwipeRefreshLayout mRefreshLayout;
 private RecyclerView mMessagesList;
@@ -61,7 +69,9 @@ private static final int TOTAL_ITEMS_TO_LOAD=5;
 private static  int mCurrentPage=1;
 private static  int itemPosition=0;
 private String  mLastKey="";
-    private String  mPrevKey="";
+private String  mPrevKey="";
+private StorageReference mImageStorage;
+private static final int GALLERY_PICK=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +79,7 @@ private String  mLastKey="";
         setContentView(R.layout.activity_chat);
 
 
-      mChatAddBtn=findViewById(R.id.chat_add_button);
+
         mChatSendBtn=findViewById(R.id.chat_send_button);
         mchatmessageView=findViewById(R.id.chat_message_view);
 
@@ -115,6 +125,28 @@ private String  mLastKey="";
         //--------   RECYCLER VIEW CODE-----------------------------------------//
        // Toast.makeText(this,"ID WE WANT: "+mCurrentUserId,Toast.LENGTH_SHORT).show();
 
+        mImageStorage= FirebaseStorage.getInstance().getReference();
+
+        final DatabaseReference databaseReference=mRootRef.child("Users").child(mchatUser);
+        databaseReference.keepSynced(true);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String displayImage=dataSnapshot.child("thumb_image").getValue().toString();
+                Picasso.get().load(displayImage).resize(5,5).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.images).into(mProfileImage);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
         mAdapter=new MessageAdapter(messagesList);
         mMessagesList=findViewById(R.id.messages_list);
 
@@ -137,6 +169,7 @@ private String  mLastKey="";
                 sendMessage();
             }
 
+
             private void sendMessage()
             {
 
@@ -144,8 +177,8 @@ private String  mLastKey="";
                 if (!(TextUtils.isEmpty(message)))
                 {
                     DatabaseReference user_message_push=mRootRef.child("messages").child(mCurrentUserId).child(mchatUser).push();
-                    String currentUserRef="messages/"+mCurrentUserId+"/"+mchatUser;
-                    String chat_user_ref="messages/"+mchatUser+"/"+mCurrentUserId;
+               final      String currentUserRef="messages/"+mCurrentUserId+"/"+mchatUser;
+                final  String chat_user_ref="messages/"+mchatUser+"/"+mCurrentUserId;
                     push_id=user_message_push.getKey();
                     Map messageMap=new HashMap();
                     messageMap.put("message",message);
@@ -168,6 +201,8 @@ private String  mLastKey="";
                 }
             }
         });
+
+
 
         //===============REFRESH RECYCLER VIEW=======================//
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -244,6 +279,8 @@ private String  mLastKey="";
         //=========================  CHAT DATABASE CODE ENDS HERE   =================================================//
 
 
+
+        //=========================  ADD BUTTON ON CLICK ACTION   =================================================//
 
 
 
